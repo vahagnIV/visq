@@ -1,4 +1,4 @@
-#include "image.h"
+#include "include/visq/image.h"
 #include "image_test.h"
 #include <gtest/gtest.h>
 

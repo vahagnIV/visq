@@ -1,4 +1,4 @@
-#include "image.h"
+#include "visq/image.h"
 
 namespace visq {
 

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "image.h"
+#include "include/visq/image.h"
 #include <memory>
 
 namespace visq {
