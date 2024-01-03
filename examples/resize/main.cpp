@@ -36,11 +36,13 @@ int main(int argc, char *argv[]) {
   
   std::shared_ptr<Interpolation<uint8_t>> interpolation{nullptr};
 
-  if(strcmp(argv[1], "bilinear") == 0)
+  if(strcmp(argv[1], "nearest") == 0) {
+    std::cout << "Resizing using Nearest neighbor interpolation" << std::endl;
     interpolation = std::make_shared<NearestNeighborInterpolation<uint8_t>>(im.value());
-  else if(strcmp(argv[1], "nearest") == 0)
+  } else if(strcmp(argv[1], "bilinear") == 0) {
+    std::cout << "Resizing using Bilinear interpolation" << std::endl;
     interpolation = std::make_shared<BilinearInterpolation<uint8_t>>(im.value());  
-  else {
+  } else {
     std::cerr << "Invalid interpolation method." << std::endl;
     return 1;
   }
