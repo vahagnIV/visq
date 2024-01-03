@@ -1,7 +1,7 @@
 #ifndef VISQ_IO_H
 #define VISQ_IO_H
 
-#include "image.h"
+#include "visq/image.h"
 #include <string>
 #include <tuple>
 #include <optional>
@@ -36,7 +36,7 @@ enum class ImageFormat {
  * @return A tuple containing an error code and an optional Image object.
  *         The Image object is non-empty if the load operation is successful.
  */
-std::tuple<ErrorCode, std::optional<Image>> LoadImage(const std::string& path);
+std::tuple<ErrorCode, std::optional<UImage>> LoadImage(const std::string& path);
 
 /**
  * @brief Saves an image to a file in the specified format.
@@ -45,7 +45,7 @@ std::tuple<ErrorCode, std::optional<Image>> LoadImage(const std::string& path);
  * @param format The format in which the image will be saved.
  * @return ErrorCode indicating the result of the save operation.
  */
-ErrorCode SaveImage(const Image& image, const std::string& path, ImageFormat format);
+ErrorCode SaveImage(const UImage& image, const std::string& path, ImageFormat format);
 
 }  // namespace visq
 

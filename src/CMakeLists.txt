@@ -1,9 +1,14 @@
 # Define the library
 
-set(TRANSFORM_SOURCES transform/resizer.cpp
+set(TRANSFORM_SOURCES 
+        transform/resizer.cpp
+        transform/nearest_neighbor_interpolation.cpp
         transform/bilinear_resizer.cpp)
 
-add_library(visq image.cpp io.cpp ${TRANSFORM_SOURCES})
+add_library(visq 
+     image.cpp io.cpp
+#     ${TRANSFORM_SOURCES}
+)
 
 target_include_directories(visq PUBLIC
         "${CMAKE_CURRENT_SOURCE_DIR}"

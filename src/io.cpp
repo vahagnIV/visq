@@ -1,4 +1,4 @@
-#include "visq/io.h"
+#include "io.h"
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -6,12 +6,12 @@
 
 namespace visq {
 
-std::tuple<ErrorCode, std::optional<Image>> LoadImage(const std::string& path) {
+std::tuple<ErrorCode, std::optional<UImage>> LoadImage(const std::string& path) {
     int width, height, channels;
     unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 
     if (data) {
-        Image img(static_cast<size_t>(width), static_cast<size_t>(height), static_cast<size_t>(channels));
+        UImage img(static_cast<size_t>(width), static_cast<size_t>(height), static_cast<size_t>(channels));
         std::memcpy(img.Data(), data, width * height * channels * sizeof(uint8_t));
         stbi_image_free(data);
         return {ErrorCode::Ok, img};
@@ -20,9 +20,9 @@ std::tuple<ErrorCode, std::optional<Image>> LoadImage(const std::string& path) {
     }
 }
 
-ErrorCode SaveImage(const Image& image, const std::string& path, ImageFormat format) {
+ErrorCode SaveImage(const UImage& image, const std::string& path, ImageFormat format) {
     if (!image.IsContinuous()) {
-        Image continuousImage(image.GetWidth(), image.GetHeight(), image.GetChannels());
+        UImage continuousImage(image.GetWidth(), image.GetHeight(), image.GetChannels());
         if (!image.CopyTo(continuousImage)) {
             return ErrorCode::InvalidFormat;
         }

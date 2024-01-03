@@ -1,35 +1,52 @@
 #include <iostream>
-#include "visq/transform/bilinear_resizer.h"
-#include "visq/io.h"
+#include "visq/transform/resizer.h"
+#include "visq/transform/nearest_neighbor_interpolation.h"
+#include "visq/transform/bilinear_interpolation.h"
+#include "io.h"
 
 void PrintError() {
-  std::cout << "Usage:\n" << "resize \"input_image\" \"output_image\" new_width new_height";
+  std::cout << "Usage:\n" << "resize \"method\"(nearest, bilinear)  \"input_image\" \"output_image\" new_width new_height";
 }
 
+using namespace visq;
+
 int main(int argc, char *argv[]) {
-  if (argc < 5) {
+  if (argc < 6) {
     PrintError();
     return 1;
   }
 
-  auto [err, im] = visq::LoadImage(argv[1]);
+  auto [err, im] = visq::LoadImage(argv[2]);
   if (err == visq::ErrorCode::InvalidFormat) {
     std::cout << "Format not supported" << std::endl;
     return 1;
   }
 
-  if (err == visq::ErrorCode::FileNotFound) {
-    std::cout << "Could not find the provided file: " << argv[1] << std::endl;
+  if (err == ErrorCode::FileNotFound) {
+    std::cout << "Could not find the provided file: " << argv[2] << std::endl;
     return 1;
   }
 
   char *error;
-  size_t new_width = std::strtol(argv[3], &error, 10);
-  size_t new_height = std::strtol(argv[4], &error, 10);
+  size_t new_width = std::strtol(argv[4], &error, 10);
+  size_t new_height = std::strtol(argv[5], &error, 10);
 
-  visq::BilinearResizer resizer;
-  visq::Image resized_image = resizer.visq::Resizer::Resize(im.value(), new_width, new_height);
-  visq::SaveImage(resized_image, argv[2], visq::ImageFormat::Jpeg);
+
+  Resizer<uint8_t> resizer;
+  
+  std::shared_ptr<Interpolation<uint8_t>> interpolation{nullptr};
+
+  if(strcmp(argv[1], "bilinear") == 0)
+    interpolation = std::make_shared<NearestNeighborInterpolation<uint8_t>>(im.value());
+  else if(strcmp(argv[1], "nearest") == 0)
+    interpolation = std::make_shared<BilinearInterpolation<uint8_t>>(im.value());  
+  else {
+    std::cerr << "Invalid interpolation method." << std::endl;
+    return 1;
+  }
+
+  auto resized_image = resizer.Resize(interpolation, new_width, new_height);
+  visq::SaveImage(resized_image, argv[3], visq::ImageFormat::Jpeg);
 
 }
 
