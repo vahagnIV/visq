@@ -34,20 +34,20 @@ int main(int argc, char *argv[]) {
 
   Resizer<uint8_t> resizer;
   
-  std::shared_ptr<Sampler<uint8_t>> interpolation{nullptr};
+  std::unique_ptr<Sampler<uint8_t>> interpolation{nullptr};
 
   if(strcmp(argv[1], "nearest") == 0) {
     std::cout << "Resizing using Nearest neighbor interpolation" << std::endl;
-    interpolation = std::make_shared<NearestNeighborInterpolation<uint8_t>>(im.value());
+    interpolation = std::make_unique<NearestNeighborInterpolation<uint8_t>>(im.value());
   } else if(strcmp(argv[1], "bilinear") == 0) {
     std::cout << "Resizing using Bilinear interpolation" << std::endl;
-    interpolation = std::make_shared<BilinearInterpolation<uint8_t>>(im.value());  
+    interpolation = std::make_unique<BilinearInterpolation<uint8_t>>(im.value());  
   } else {
     std::cerr << "Invalid interpolation method." << std::endl;
     return 1;
   }
 
-  auto resized_image = resizer.Resize(interpolation, new_width, new_height);
+  auto resized_image = resizer.Resize(interpolation.get(), new_width, new_height);
   visq::SaveImage(resized_image, argv[3], visq::ImageFormat::Jpeg);
 
 }
