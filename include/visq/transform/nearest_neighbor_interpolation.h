@@ -1,14 +1,14 @@
 #ifndef VISQPROJECT_SRC_TRANSFORM_NEAREST_NEIGHBOR_INTERPOLATION_H_
 #define VISQPROJECT_SRC_TRANSFORM_NEAREST_NEIGHBOR_INTERPOLATION_H_
 
-#include "interpolation.h"
+#include <visq/transform/sampler.h>
 
 namespace visq {
 
 template<typename T>
-class NearestNeighborInterpolation: public Interpolation<T> {
+class NearestNeighborInterpolation: public Sampler<T> {
 public:
-  NearestNeighborInterpolation(const Image<T> & image): Interpolation<T>(image) {}
+  NearestNeighborInterpolation(const Image<T> & image): Sampler<T>(image) {}
  
   [[nodiscard]] uint8_t Interpolate(double y, double x, size_t channel) const override {
     y = std::max(0., y);

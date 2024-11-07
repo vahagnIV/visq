@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
   Resizer<uint8_t> resizer;
   
-  std::shared_ptr<Interpolation<uint8_t>> interpolation{nullptr};
+  std::shared_ptr<Sampler<uint8_t>> interpolation{nullptr};
 
   if(strcmp(argv[1], "nearest") == 0) {
     std::cout << "Resizing using Nearest neighbor interpolation" << std::endl;

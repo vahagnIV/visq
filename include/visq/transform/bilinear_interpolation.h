@@ -1,14 +1,14 @@
 #ifndef VISQPROJECT_SRC_TRANSFORM_BILINEAR_INTERPOLATION_H_
 #define VISQPROJECT_SRC_TRANSFORM_BILINEAR_INTERPOLATION_H_
 
-#include "visq/transform/interpolation.h"
+#include <visq/transform/sampler.h>
 
 namespace visq {
 
 template<typename T>
-class BilinearInterpolation : public Interpolation<T> {
+class BilinearInterpolation : public Sampler<T> {
 public:
-  BilinearInterpolation(const Image<T> & image): Interpolation<T>(image) {}
+  BilinearInterpolation(const Image<T> & image): Sampler<T>(image) {}
 
   [[nodiscard]] T Interpolate(double y, double x, size_t channel) const override {
 
