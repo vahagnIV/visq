@@ -22,7 +22,19 @@ class Image {
   Image(size_t width, size_t height, size_t channels)
     : width_(width), height_(height), channels_(channels),
       stride_(width * channels), offset_(0),
-      data_(new uint8_t[width * height * channels]) {}
+      data_(new T[width * height * channels]) {}
+
+   /**
+   * @brief Constructs an Image object with specified width, height, and channels and sets all values to @value.
+   * @param width Width of the image.
+   * @param height Height of the image.
+   * @param channels Number of color channels in the image.
+   * @param value Value for initialization.
+   */
+  Image(size_t width, size_t height, size_t channels, T value):Image(width, height, channels){
+    for(size_t i = 0; i < height * width * channels; ++i) data_[i] = value;
+     
+  }
 
   /**
    * @brief Constructs an Image object as a sub-image of another image.
@@ -89,12 +101,12 @@ class Image {
 
     if (this->stride_ == this->width_ * this->channels_ && other.stride_ == other.width_ * other.channels_ &&
         this->offset_ == 0 && other.offset_ == 0) {
-      std::memcpy(other.data_.get(), this->data_.get(), this->height_ * this->stride_ * sizeof(uint8_t));
+      std::memcpy(other.data_.get(), this->data_.get(), this->height_ * this->stride_ * sizeof(T));
     } else {
        for (int y = 0; y < this->height_; ++y) {
          std::memcpy(other.data_.get() + other.offset_ + y * other.stride_,
                      this->data_.get() + this->offset_ + y * this->stride_,
-                     this->width_ * this->channels_ * sizeof(uint8_t));
+                     this->width_ * this->channels_ * sizeof(T));
        }
     }
 

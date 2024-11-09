@@ -3,7 +3,9 @@ enable_testing()
 find_package(GTest REQUIRED)
 
 # Define the test executable
-add_executable(visq_test image_test.cpp)
+add_executable(visq_test image_test.cpp 
+                         constant_border_extension_test.cpp
+                         mirror_border_extension_test.cpp)
 
 # Specify include directories
 target_include_directories(visq_test PRIVATE "${PROJECT_SOURCE_DIR}/src")
