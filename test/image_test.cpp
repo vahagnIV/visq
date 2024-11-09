@@ -57,7 +57,7 @@ TEST(ImageTest, CopyToWhenContinuousMethod) {
   for (int i = 0; i < 100; ++i) {
     for (int j = 0; j < 100; ++j) {
       for (int k = 0; k < 3; ++k) {
-        img1.Set(v++,i, j, k);
+        img1.Set(v++, i, j, k);
       }
     }
   }
@@ -97,6 +97,28 @@ TEST(ImageTest, CopyToWhenNotContinuous) {
   }
 }
 
+TEST(ImageTest, ConversionOperator) {
+
+  Image<double> img1Test(100, 100, 3);
+  uint8_t v = 0;
+  for (int i = 0; i < 100; ++i) {
+    for (int j = 0; j < 100; ++j) {
+      for (int k = 0; k < 3; ++k) {
+        img1Test.Set(v++, i, j, k);
+      }
+    }
+  }
+
+  Image<uint8_t> img1 = img1Test;
+  v = 0;
+  for (int i = 0; i < 100; ++i) {
+    for (int j = 0; j < 100; ++j) {
+      for (int k = 0; k < 3; ++k) {
+        ASSERT_EQ(img1.At(i, j, k), v++);
+      }
+    }
+  }
+}
 // Additional tests can be written for edge cases, error conditions, etc.
 
 }  // namespace visq

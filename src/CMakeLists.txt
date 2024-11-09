@@ -1,13 +1,11 @@
 # Define the library
 
 set(TRANSFORM_SOURCES 
-        transform/resizer.cpp
-        transform/nearest_neighbor_interpolation.cpp
-        transform/bilinear_resizer.cpp)
+        transform/filters/gaussian_filter.cpp)
 
 add_library(visq 
      image.cpp io.cpp
-#     ${TRANSFORM_SOURCES}
+     ${TRANSFORM_SOURCES}
 )
 
 target_include_directories(visq PUBLIC

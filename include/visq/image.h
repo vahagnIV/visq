@@ -20,20 +20,20 @@ class Image {
    * @param channels Number of color channels in the image.
    */
   Image(size_t width, size_t height, size_t channels)
-    : width_(width), height_(height), channels_(channels),
-      stride_(width * channels), offset_(0),
-      data_(new T[width * height * channels]) {}
+      : width_(width), height_(height), channels_(channels),
+        stride_(width * channels), offset_(0),
+        data_(new T[width * height * channels]) {}
 
-   /**
-   * @brief Constructs an Image object with specified width, height, and channels and sets all values to @value.
-   * @param width Width of the image.
-   * @param height Height of the image.
-   * @param channels Number of color channels in the image.
-   * @param value Value for initialization.
-   */
-  Image(size_t width, size_t height, size_t channels, T value):Image(width, height, channels){
-    for(size_t i = 0; i < height * width * channels; ++i) data_[i] = value;
-     
+  /**
+  * @brief Constructs an Image object with specified width, height, and channels and sets all values to @value.
+  * @param width Width of the image.
+  * @param height Height of the image.
+  * @param channels Number of color channels in the image.
+  * @param value Value for initialization.
+  */
+  Image(size_t width, size_t height, size_t channels, T value) : Image(width, height, channels) {
+    for (size_t i = 0; i < height * width * channels; ++i) data_[i] = value;
+
   }
 
   /**
@@ -44,10 +44,10 @@ class Image {
    * @param stride Stride (row length in memory) of the sub-image.
    * @param offset Offset from the start of the source image data to the sub-image.
    */
-  Image(const Image<T>& other, size_t new_width, size_t new_height, size_t offset)
-    : width_(new_width), height_(new_height), channels_(other.channels_),
-      stride_(other.stride_), offset_(offset),
-      data_(other.data_) {}
+  Image(const Image<T> &other, size_t new_width, size_t new_height, size_t offset)
+      : width_(new_width), height_(new_height), channels_(other.channels_),
+        stride_(other.stride_), offset_(offset),
+        data_(other.data_) {}
 
   /**
    * @brief Accesses or modifies a pixel's channel value.
@@ -67,7 +67,7 @@ class Image {
    * @param c Channel index.
    * @return Constant reference to the pixel's channel value.
    */
-  [[nodiscard]] const T& At(size_t y, size_t x, size_t c) const  {
+  [[nodiscard]] const T &At(size_t y, size_t x, size_t c) const {
     return data_.get()[(y * stride_) + (x * channels_) + c + offset_];
   }
 
@@ -76,7 +76,7 @@ class Image {
    * @note Direct access to the data can be unsafe. Use with caution.
    * @return Raw pointer to the image data.
    */
-  T* Data() {
+  T *Data() {
     return data_.get();
   }
 
@@ -84,7 +84,7 @@ class Image {
    * @brief Gets a read-only raw pointer to the image data.
    * @return Constant raw pointer to the image data.
    */
-  [[nodiscard]] const T* Data() const {
+  [[nodiscard]] const T *Data() const {
     return data_.get();
   }
 
@@ -103,11 +103,11 @@ class Image {
         this->offset_ == 0 && other.offset_ == 0) {
       std::memcpy(other.data_.get(), this->data_.get(), this->height_ * this->stride_ * sizeof(T));
     } else {
-       for (int y = 0; y < this->height_; ++y) {
-         std::memcpy(other.data_.get() + other.offset_ + y * other.stride_,
-                     this->data_.get() + this->offset_ + y * this->stride_,
-                     this->width_ * this->channels_ * sizeof(T));
-       }
+      for (int y = 0; y < this->height_; ++y) {
+        std::memcpy(other.data_.get() + other.offset_ + y * other.stride_,
+                    this->data_.get() + this->offset_ + y * this->stride_,
+                    this->width_ * this->channels_ * sizeof(T));
+      }
     }
 
     return true;
@@ -121,12 +121,34 @@ class Image {
     return stride_ == width_ * channels_;
   }
 
+  /*!
+   * Conversion operator
+   * @tparam K template parameter of the target image
+   * @return The converted image.
+   */
+  template<class K>
+  operator Image<K>() const {
+    Image<K> result(GetWidth(), GetHeight(), GetChannels());
+    for (int i = 0; i < GetHeight(); ++i) {
+      for (int j = 0; j < GetWidth(); ++j) {
+        for (int k = 0; k < GetChannels(); ++k) {
+          result.Set(At(i, j, k), i, j, k);
+        }
+      }
+    }
+    return result;
+  }
+
   // Getters
   [[nodiscard]] size_t GetWidth() const { return width_; }
   [[nodiscard]] size_t GetHeight() const { return height_; }
   [[nodiscard]] size_t GetChannels() const { return channels_; }
   [[nodiscard]] size_t GetStride() const { return stride_; }
   [[nodiscard]] size_t GetOffset() const { return offset_; }
+
+  ~Image(){
+
+  }
 
  private:
   size_t width_;
