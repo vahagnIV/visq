@@ -1,7 +1,8 @@
 # Define the library
 
 set(TRANSFORM_SOURCES 
-        transform/filters/gaussian_filter.cpp)
+        transform/filters/gaussian_filter.cpp
+        transform/fft.cpp)
 
 add_library(visq 
      image.cpp io.cpp

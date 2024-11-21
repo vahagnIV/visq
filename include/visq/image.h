@@ -139,6 +139,18 @@ class Image {
     return result;
   }
 
+  operator T() const {
+    return At(0,0,0);
+  }
+  
+  Image<T> Row(size_t row){
+    return Image<T>(*this, width_, 1, offset_ + row * stride_ );
+  }
+
+  Image<T> Column(size_t column){
+    return Image<T>(*this, 1, height_, offset_ + column * channels_ );
+  }
+
   // Getters
   [[nodiscard]] size_t GetWidth() const { return width_; }
   [[nodiscard]] size_t GetHeight() const { return height_; }

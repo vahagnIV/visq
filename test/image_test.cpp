@@ -119,6 +119,64 @@ TEST(ImageTest, ConversionOperator) {
     }
   }
 }
+
+TEST(ImageTest, Row){
+  const size_t width = 100;
+  const size_t height = 100;
+  const size_t channels = 2;
+
+  Image<uint8_t> img(width, height, channels);
+  uint8_t v = 0;
+  for (int i = 0; i < height; ++i) {
+    for (int j = 0; j < width; ++j) {
+      for (int k = 0; k < channels; ++k) {
+        img.Set(v++, i, j, k);
+      }
+    }
+  }
+
+  Image<uint8_t> img1(img, width - 2, height -2, width * channels * 2 + channels *2);
+
+
+  auto r = img1.Row(1);
+  ASSERT_EQ(r.GetWidth(), img1.GetWidth());
+  ASSERT_EQ(r.GetHeight(), 1);
+  for(size_t x =0; x < img1.GetWidth(); ++x){
+    for(size_t c = 0; c < channels; ++c){
+      ASSERT_EQ(img1.At( 1, x, c), r.At(0, x, c));
+    }
+  }
+}
+
+
+TEST(ImageTest, Column){
+  const size_t width = 100;
+  const size_t height = 100;
+  const size_t channels = 2;
+
+  Image<uint8_t> img(width, height, channels);
+  uint8_t v = 0;
+  for (int i = 0; i < height; ++i) {
+    for (int j = 0; j < width; ++j) {
+      for (int k = 0; k < channels; ++k) {
+        img.Set(v++, i, j, k);
+      }
+    }
+  }
+
+  Image<uint8_t> img1(img, width - 2, height -2, width * channels * 2 + channels *2);
+
+
+  auto r = img1.Column(1);
+  ASSERT_EQ(r.GetHeight(), img1.GetHeight());
+  ASSERT_EQ(r.GetWidth(), 1);
+  for(size_t y =0; y < img1.GetHeight(); ++y){
+    for(size_t c = 0; c < channels; ++c){
+      ASSERT_EQ(img1.At( y, 1, c), r.At(y, 0, c));
+    }
+  }
+}
+
 // Additional tests can be written for edge cases, error conditions, etc.
 
 }  // namespace visq
