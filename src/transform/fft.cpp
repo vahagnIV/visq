@@ -8,7 +8,7 @@ namespace visq {
 namespace {
 
 Image<std::complex<double>> GetOdds(const Image<std::complex<double>> & input_row){
-  Image<std::complex<double>> result(input_row.GetWidth(), 1, input_row.GetChannels());
+  Image<std::complex<double>> result(input_row.GetWidth() / 2, 1, input_row.GetChannels());
   for(size_t i = 0; i < input_row.GetWidth() / 2; ++i){
     for(size_t c = 0; c < input_row.GetChannels(); ++c){
       result.Set(input_row.At(0, 2 * i + 1, c), 0, i, c);
@@ -18,7 +18,7 @@ Image<std::complex<double>> GetOdds(const Image<std::complex<double>> & input_ro
 }
 
 Image<std::complex<double>> GetEvens(const Image<std::complex<double>> & input_row){
-  Image<std::complex<double>> result(input_row.GetWidth(), 1, input_row.GetChannels());
+  Image<std::complex<double>> result(input_row.GetWidth() / 2, 1, input_row.GetChannels());
   for(size_t i = 0; i < input_row.GetWidth() / 2; ++i){
     for(size_t c = 0; c < input_row.GetChannels(); ++c){
       result.Set(input_row.At(0, 2*i, c), 0, i, c);
