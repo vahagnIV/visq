@@ -172,7 +172,7 @@ TEST(ImageTest, Column){
   ASSERT_EQ(r.GetWidth(), 1);
   for(size_t y =0; y < img1.GetHeight(); ++y){
     for(size_t c = 0; c < channels; ++c){
-      ASSERT_EQ(img1.At( y, 1, c), r.At(y, 0, c));
+      ASSERT_EQ(img.At( y+2, 3, c), r.At(y, 0, c));
     }
   }
 }

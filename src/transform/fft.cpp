@@ -28,8 +28,8 @@ Image<std::complex<double>> GetEvens(const Image<std::complex<double>> & input_r
 }
 
 void FFT1D(Image<std::complex<double>> & input_row){
-  size_t N = input_row.GetWidth() / 2;  
-  if (N == 1) return;
+  size_t N = input_row.GetWidth();
+  if (input_row.GetWidth() == 1) return;
   else {
     auto odds = GetOdds(input_row);
     auto evens = GetEvens(input_row);
@@ -37,12 +37,12 @@ void FFT1D(Image<std::complex<double>> & input_row){
     FFT1D(odds);
     FFT1D(evens);
     
-    for (size_t  k = 0; k < N /2; ++k ){
+    for (size_t  k = 0; k < N / 2; ++k ){
       for(size_t c = 0; c < input_row.GetChannels(); ++c){
         std::complex<double> e = evens.At(0,k,c);
-        std::complex<double> o = odds.At(0,k,c)* std::polar(1., 2 * M_PI * k / N);
-        input_row.Set(e + o, k, 0, c);
-        input_row.Set(e - o, k + N / 2, 0, c);
+        std::complex<double> o = odds.At(0,k,c)* std::polar(1., -2 * M_PI * k / N);
+        input_row.Set(e + o, 0, k, c);
+        input_row.Set(e - o, 0, k + N /2 , c);
    
       }
    }
@@ -51,7 +51,7 @@ void FFT1D(Image<std::complex<double>> & input_row){
  
 }  // namespace
 
-Image<std::complex<double>> CooleyTukeyFFT(const Image<double>& input) {
+Image<std::complex<double>> CooleyTukeyFFT(const Image<double> input) {
   size_t width = input.GetWidth();
   size_t height = input.GetHeight();
 

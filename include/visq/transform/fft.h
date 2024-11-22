@@ -13,7 +13,7 @@ namespace visq {
  * @param input The input image of type Image<double>.
  * @return An Image<std::complex<double>> containing the FFT result.
  */
-Image<std::complex<double>> CooleyTukeyFFT(const Image<double>& input);
+Image<std::complex<double>> CooleyTukeyFFT(const Image<double> input);
 
 }  // namespace visq
 

@@ -14,10 +14,10 @@ using namespace visq;
 
 int main(int argc, char *argv[]) {
    Image<uint8_t> image(4,1,1);
-   image.Set(0, 0, 0, 0);
-   image.Set(1, 0, 1, 0);
-   image.Set(2, 0, 2, 0);
-   image.Set(3, 0, 3, 0);
+   image.Set(1, 0, 0, 0);
+   image.Set(2, 0, 1, 0);
+   image.Set(3, 0, 2, 0);
+   image.Set(4, 0, 3, 0);
    auto result  = CooleyTukeyFFT(image);
    
    for(size_t i =0; i < image.GetWidth(); ++i)
