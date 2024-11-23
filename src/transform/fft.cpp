@@ -48,7 +48,22 @@ void FFT1D(Image<std::complex<double>> & input_row){
    }
   }
 }
- 
+
+size_t FindNearestPowerOf2(size_t x){
+    if((x -1) & x == 0)
+      return x;
+
+    x |= (x >> 1);
+    x |= (x >> 2);
+    x |= (x >> 4);
+    x |= (x >> 8);
+    x |= (x >> 16);
+// We assume that we are building for a 64 bit machine
+    x |= (x >> 32);
+// #endif
+    return(x+1);
+}
+
 }  // namespace
 
 Image<std::complex<double>> CooleyTukeyFFT(const Image<double> input) {
@@ -56,9 +71,14 @@ Image<std::complex<double>> CooleyTukeyFFT(const Image<double> input) {
   size_t height = input.GetHeight();
 
   // Allocate output image
-  Image<std::complex<double>> input_c = input;
+  size_t nearest_power_of_2 =FindNearestPowerOf2(input.GetWidth());
+
+  Image<std::complex<double>> output(nearest_power_of_2,height,input.GetChannels(),0);
+  Image<std::complex<double>> input_c (output,width, height,0);
+  input.CopyTo(input_c);
+
   for (size_t y = 0; y < height; ++y) {
-    auto row = input_c.Row(y);
+    auto row = output.Row(y);
     FFT1D(row);
   }
 

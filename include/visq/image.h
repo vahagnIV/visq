@@ -98,21 +98,18 @@ class Image {
    */
   template<typename R>
   bool CopyTo(Image<R> &other) const {
-    if (this->width_ != other.width_ || this->height_ != other.height_ || this->channels_ != other.channels_) {
+    if (this->width_ != other.GetWidth() || this->height_ != other.GetHeight()
+        || this->channels_ != other.GetChannels()) {
       return false;
     }
 
-    if (this->stride_ == this->width_ * this->channels_ && other.stride_ == other.width_ * other.channels_ &&
-        this->offset_ == 0 && other.offset_ == 0) {
-      std::memcpy(other.data_.get(), this->data_.get(), this->height_ * this->stride_ * sizeof(T));
-    } else {
-      for (int y = 0; y < this->height_; ++y) {
-        std::memcpy(other.data_.get() + other.offset_ + y * other.stride_,
-                    this->data_.get() + this->offset_ + y * this->stride_,
-                    this->width_ * this->channels_ * sizeof(T));
+    for (size_t y = 0; y < this->height_; ++y) {
+      for (size_t x = 0; x < this->width_; ++x) {
+        for (size_t c = 0; c < channels_; ++c) {
+          other.Set(At(y, x, c), y, x, c);
+        }
       }
     }
-
     return true;
   }
 
@@ -143,15 +140,15 @@ class Image {
   }
 
   operator T() const {
-    return At(0,0,0);
-  }
-  
-  Image<T> Row(size_t row){
-    return Image<T>(*this, width_, 1, offset_ + row * stride_ );
+    return At(0, 0, 0);
   }
 
-  Image<T> Column(size_t column){
-    return Image<T>(*this, 1, height_, offset_ + column * channels_ );
+  Image<T> Row(size_t row) {
+    return Image<T>(*this, width_, 1, offset_ + row * stride_);
+  }
+
+  Image<T> Column(size_t column) {
+    return Image<T>(*this, 1, height_, offset_ + column * channels_);
   }
 
   // Getters
@@ -161,7 +158,7 @@ class Image {
   [[nodiscard]] size_t GetStride() const { return stride_; }
   [[nodiscard]] size_t GetOffset() const { return offset_; }
 
-  ~Image(){
+  ~Image() {
 
   }
 
