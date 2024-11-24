@@ -2,7 +2,8 @@
 
 set(TRANSFORM_SOURCES 
         transform/filters/gaussian_filter.cpp
-        transform/fft.cpp)
+        transform/fft.cpp
+        utils/midpoint_circle.cpp)
 
 add_library(visq 
      image.cpp io.cpp

@@ -1,0 +1,2 @@
+add_executable(keypoint_detector main.cpp)
+target_link_libraries(keypoint_detector visq)
