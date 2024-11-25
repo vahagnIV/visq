@@ -2,13 +2,22 @@
 #define VISQPROJECT_INCLUDE_VISQ_FEATURES_BRIEF_KEYPOINT_DETECTOR_H_
 
 #include <visq/features/ikeypoint_detector.h>
+#include <visq/utils/midpoint_circle.h>
+
+
 namespace visq::features {
 
 template<typename T>
 class BRIEFKeypointDetector : public IKeypointDetector<T> {
+  const unsigned circle_size_;
+  std::Point2D<int> circle_; 
  public:
+  BRIEFKeypointDetector(unsigned circle_size = 3): circle_size_(circle_size){
+    circle_ = utils::CirclePixels(circle_size);
+  }
+
   std::vector<geometry::Point2D<double>> ExtractKeyPoints(const Image<T> &image) override {
-    if (image.GetWidth() < 5 || image.GetHeight() < 5)
+    if (image.GetWidth() < 2 * circle_size_+ 1 || image.GetHeight() < 2 * circle_size_ + 1)
       return {};
 
     if (image.GetChannels() != 1 && image.GetChannels() != 3)
@@ -16,17 +25,20 @@ class BRIEFKeypointDetector : public IKeypointDetector<T> {
 
     Image<double> monochrome = image.GetChannels() == 1 ? image : GetMonochrome(image);
 
-    int total_greater = 0;
 
-    for (size_t y = 2; y < image.GetHeight(); ++y) {
+    for (size_t y = ; y < image.GetHeight(); ++y) {
       for (int x = 2; x < image.GetWidth(); ++x) {
         double value = image.At(y, x, 0);
-        if (image.At(y - 2, x - 1, 0) > value)
-          ++total_greater;
+        int total_greater = 0;
+        for(const auto & p: circles_){
+          if(image.At(y + p.y, x + p.x,0) > value) ++total_greater;
+        }
+        if ( total_greater > 10)
+           result.emplace_back(x,y);
       }
     }
 
-    return std::vector<geometry::Point2D<double>>();
+    return result;
   }
  private:
   Image<double> GetMonochrome(const Image<T> &image) {

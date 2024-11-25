@@ -10,7 +10,7 @@ void ExpandToQuarant(std::vector<visq::geometry::Point2D<int>> &pts) {
 
 void ExpandToSemiCircle(std::vector<visq::geometry::Point2D<int>> &pts) {
   for (int i = pts.size() - 2; i >= 0; --i) {
-    pts.emplace_back(pts[i].y, -pts[i].x);
+    pts.emplace_back( -pts[i].x, pts[i].y);
   }
 }
 

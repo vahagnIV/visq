@@ -58,7 +58,7 @@ class Image {
    * @return Reference to the pixel's channel value.
    */
   void Set(T value, size_t y, size_t x, size_t c) {
-    assert((y * stride_) + (x * channels_) + c + offset_ < stride_ * height_);
+    assert((y * stride_) + (x * channels_) + c  < stride_ * height_);
     data_.get()[(y * stride_) + (x * channels_) + c + offset_] = value;
   }
 
@@ -70,7 +70,7 @@ class Image {
    * @return Constant reference to the pixel's channel value.
    */
   [[nodiscard]] const T &At(size_t y, size_t x, size_t c) const {
-    assert((y * stride_) + (x * channels_) + c + offset_ < stride_ * height_);
+    assert((y * stride_) + (x * channels_) + c  < stride_ * height_);
     return data_.get()[(y * stride_) + (x * channels_) + c + offset_];
   }
 
