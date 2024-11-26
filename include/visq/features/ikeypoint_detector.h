@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <visq/image.h>
-#include <visq/geometry/point_2d.h>
+#include <visq/features/keypoint.h>
 
 namespace visq {
 namespace features {
@@ -12,7 +12,7 @@ template<typename T>
 class IKeypointDetector {
  public:
   virtual ~IKeypointDetector() = default;
-  virtual std::vector<geometry::Point2D<double>> ExtractKeyPoints(const Image<T> & image) = 0;
+  virtual std::vector<KeyPoint> ExtractKeyPoints(const Image<T> & image) = 0;
 };
 
 } // features
