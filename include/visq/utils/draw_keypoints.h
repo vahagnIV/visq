@@ -8,7 +8,7 @@
 
 namespace visq::utils {
 
-void DrawKeypoints(const std::vector<features::KeyPoint> & key_points, Image<uint8_t> & target, Color color = Color(0, 255, 0), unsigned radius = 3); 
+void DrawKeypoints(const std::vector<features::KeyPoint> & key_points, Image<uint8_t> & target, Color color = Color(0, 255, 0), unsigned radius = 2); 
 
 } // utils
 // visq

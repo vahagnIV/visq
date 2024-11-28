@@ -18,7 +18,7 @@ class BRIEFKeypointDetector : public IKeypointDetector<T> {
   double count_threshold_percent_;
   double value_threshold_;
  public:
-  BRIEFKeypointDetector(unsigned circle_size = 3, double count_threshold_percent = 8./16., double value_threshold = 1.): circle_size_(circle_size), count_threshold_percent_(count_threshold_percent), value_threshold_(value_threshold) {
+  BRIEFKeypointDetector(unsigned circle_size = 3, double count_threshold_percent = 12./16., double value_threshold = 1.): circle_size_(circle_size), count_threshold_percent_(count_threshold_percent), value_threshold_(value_threshold) {
     circle_ = utils::CirclePixels(circle_size);
     std::cout << "Circle size: " << circle_.size() << std::endl;
   }
@@ -38,7 +38,7 @@ class BRIEFKeypointDetector : public IKeypointDetector<T> {
 
   std::vector<KeyPoint> ExtractKeyPointsImpl(const Image<double> &input){
     size_t count_threshold = count_threshold_percent_ * circle_.size();
-    Image<double> kernel = transform::filters::CreateGaussianFilter(10, 10, 10);
+    Image<double> kernel = transform::filters::CreateGaussianFilter(3, 3, 3);
 
     border_extensions::MirrorBorder<double> ext_image(input);
     Image<double> image = Filter::Apply(&kernel, &ext_image);
@@ -46,18 +46,26 @@ class BRIEFKeypointDetector : public IKeypointDetector<T> {
     std::cout << "Count threashold: " << count_threshold << std::endl; 
     std::vector<KeyPoint> result;
 
-    for (size_t y = circle_size_; y < image.GetHeight() - circle_size_; ++y) {
-      for (int x = circle_size_; x < image.GetWidth() - circle_size_; ++x) {
+    for (size_t y = circle_size_; y < image.GetHeight() - circle_size_ - 1; ++y) {
+      for (int x = circle_size_; x < image.GetWidth() - circle_size_- 1; ++x) {
         double value = image.At(y, x, 0) + value_threshold_;
         // std::cout << "V: " << value << std::endl;
+
         int total_greater = 0;
         for(const auto & p: circle_){
-          if(image.At(y + p.y, x + p.x,0) > value) ++total_greater;
+          //std::cout << image.At(y + p.y, x + p.x,0) << std::endl;
+          if(image.At(y + p.y, x + p.x,0) > value) { 
+            if(++total_greater > count_threshold){
+              result.emplace_back(KeyPoint{.pt = geometry::Point2D<double>(x,y)});
+              break;
+            }
+          }
+          else
+            total_greater = 0;
         }
-        if ( total_greater > count_threshold)
-           result.emplace_back(KeyPoint{.pt = geometry::Point2D<double>(x,y)});
       }
-   }
+    }
+   
 
     return result;
   }
