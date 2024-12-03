@@ -1,10 +1,14 @@
 #include <iostream>
-#include "visq/features/brief_keypoint_detector.h"
-#include "visq/utils/draw_keypoints.h"
+
 #include "io.h"
+#include "visq/features/fast_keypoint_detector.h"
+#include "visq/utils/draw_keypoints.h"
 
 void PrintError() {
-  std::cout << "Usage:\n" << "resize \"method\"(nearest, bilinear)  \"input_image\" \"output_image\"" << std::endl;
+  std::cout << "Usage:\n"
+            << "resize \"method\"(nearest, bilinear)  \"input_image\" "
+               "\"output_image\""
+            << std::endl;
 }
 
 using namespace visq;
@@ -25,18 +29,19 @@ int main(int argc, char *argv[]) {
     std::cout << "Could not find the provided file: " << argv[2] << std::endl;
     return 1;
   }
-  
-  std::cout << "Read input image. Width: " << im.value().GetWidth() <<" Height: " << im.value().GetHeight() << std::endl;
 
-  
+  std::cout << "Read input image. Width: " << im.value().GetWidth()
+            << " Height: " << im.value().GetHeight() << std::endl;
+
   std::unique_ptr<features::IKeypointDetector<uint8_t>> kp_detector;
 
-  if(strcmp(argv[1], "brief") == 0) {
+  if (strcmp(argv[1], "brief") == 0) {
     std::cout << "Extracting keypoints with BRIEF" << std::endl;
-    kp_detector = std::make_unique<features::BRIEFKeypointDetector<uint8_t>>();
-  } else if(strcmp(argv[1], "bilinear") == 0) {
+    kp_detector = std::make_unique<features::FASTKeypointDetector<uint8_t>>();
+  } else if (strcmp(argv[1], "bilinear") == 0) {
     std::cout << "Resizing using Bilinear interpolation" << std::endl;
-    //interpolation = std::make_unique<BilinearInterpolation<uint8_t>>(im.value());  
+    // interpolation =
+    // std::make_unique<BilinearInterpolation<uint8_t>>(im.value());
   } else {
     std::cerr << "Invalid interpolation method." << std::endl;
     return 1;
@@ -44,10 +49,8 @@ int main(int argc, char *argv[]) {
 
   Image<uint8_t> image = im.value();
   auto keypoints = kp_detector->ExtractKeyPoints(image);
-  std::cout<< "Found " << keypoints.size() << " keypoints."<< std::endl;
-   utils::DrawKeypoints(keypoints, image);
-  
+  std::cout << "Found " << keypoints.size() << " keypoints." << std::endl;
+  utils::DrawKeypoints(keypoints, image);
+
   visq::SaveImage(image, argv[3], visq::ImageFormat::Jpeg);
-
 }
-

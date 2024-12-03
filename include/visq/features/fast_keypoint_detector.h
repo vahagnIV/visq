@@ -1,8 +1,9 @@
-#ifndef VISQPROJECT_INCLUDE_VISQ_FEATURES_BRIEF_KEYPOINT_DETECTOR_H_
-#define VISQPROJECT_INCLUDE_VISQ_FEATURES_BRIEF_KEYPOINT_DETECTOR_H_
+#ifndef VISQPROJECT_INCLUDE_VISQ_FEATURES_FAST_KEYPOINT_DETECTOR_H_
+#define VISQPROJECT_INCLUDE_VISQ_FEATURES_FAST_KEYPOINT_DETECTOR_H_
 
 #include <visq/features/ikeypoint_detector.h>
 #include <visq/utils/midpoint_circle.h>
+#include <visq/utils/monochrome.h>
 
 #include "visq/transform/border_extensions/mirror_border.h"
 #include "visq/transform/filter.h"
@@ -12,13 +13,13 @@
 namespace visq::features {
 
 template<typename T>
-class BRIEFKeypointDetector : public IKeypointDetector<T> {
+class FASTKeypointDetector : public IKeypointDetector<T> {
   const unsigned circle_size_;
   std::vector<geometry::Point2D<int>> circle_; 
   double count_threshold_percent_;
   double value_threshold_;
  public:
-  BRIEFKeypointDetector(unsigned circle_size = 3, double count_threshold_percent = 12./16., double value_threshold = 1.): circle_size_(circle_size), count_threshold_percent_(count_threshold_percent), value_threshold_(value_threshold) {
+  FASTKeypointDetector(unsigned circle_size = 3, double count_threshold_percent = 12./16., double value_threshold = 1.): circle_size_(circle_size), count_threshold_percent_(count_threshold_percent), value_threshold_(value_threshold) {
     circle_ = utils::CirclePixels(circle_size);
     std::cout << "Circle size: " << circle_.size() << std::endl;
   }
@@ -32,7 +33,7 @@ class BRIEFKeypointDetector : public IKeypointDetector<T> {
 
     if(image.GetChannels() == 1)
       return ExtractKeyPointsImpl(image);
-    return ExtractKeyPointsImpl(GetMonochrome(image));    
+    return ExtractKeyPointsImpl(utils::ToMonochrome<T, double>(image));    
   }
  private:
 
@@ -70,19 +71,9 @@ class BRIEFKeypointDetector : public IKeypointDetector<T> {
     return result;
   }
 
-  Image<double> GetMonochrome(const Image<T> &image) {
-    assert(image.GetChannels() == 3);
-    Image<double> output(image.GetWidth(), image.GetHeight(), 1);
-    for (size_t y = 0; y < image.GetHeight(); ++y) {
-      for (size_t x = 0; x < image.GetWidth(); ++x) {
-        output.Set(0.299 * image.At(y, x, 0) + 0.587 * image.At(y, x, 1) + 0.114 *image.At(y, x, 2), y, x, 0);
-      }
-    }
-    return output;
-  }
 };
 
 } // features
 // visq
 
-#endif //VISQPROJECT_INCLUDE_VISQ_FEATURES_BRIEF_KEYPOINT_DETECTOR_H_
+#endif //VISQPROJECT_INCLUDE_VISQ_FEATURES_FAST_KEYPOINT_DETECTOR_H_

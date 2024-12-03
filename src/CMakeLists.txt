@@ -2,6 +2,7 @@
 
 set(TRANSFORM_SOURCES 
         transform/filters/gaussian_filter.cpp
+        transform/filters/gradient.cpp
         transform/fft.cpp
         utils/midpoint_circle.cpp
         utils/draw_keypoints.cpp)

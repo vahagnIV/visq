@@ -1,4 +1,4 @@
-#include <visq/features/brief_keypoint_detector.h>
+#include <visq/features/fast_keypoint_detector.h>
 
 
 int main(int argc, char* argv[]){

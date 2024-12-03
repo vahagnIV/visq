@@ -14,6 +14,8 @@ target_include_directories(visq_test PRIVATE "${PROJECT_SOURCE_DIR}/src")
 # Link the test executable against the Google Test libraries and visq library
 target_link_libraries(visq_test GTest::GTest GTest::Main visq)
 
+enable_testing()
+
 # Add the tests
 add_test(NAME visq_test COMMAND visq_test)
 

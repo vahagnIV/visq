@@ -50,7 +50,7 @@ void FFT1D(Image<std::complex<double>> & input_row){
 }
 
 size_t FindNearestPowerOf2(size_t x){
-    if((x -1) & x == 0)
+    if(((x -1) & x) == 0)
       return x;
 
     x |= (x >> 1);

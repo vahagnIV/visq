@@ -8,6 +8,7 @@ namespace visq::features{
 
 struct KeyPoint{
   geometry::Point2D<double> pt;
+  double angle;
 };
 
 } // visq::features
