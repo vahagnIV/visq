@@ -6,7 +6,9 @@
 namespace visq::utils {
 template <typename T, typename O = T>
 Image<T> ToMonochrome(const Image<T>& image) {
-  assert(image.GetChannels() == 3);
+  if(image.GetChannels() == 1) return image;
+  if(image.GetChannels() != 3) return image; // What shoud we do
+  
   Image<O> output(image.GetWidth(), image.GetHeight(), 1);
   for (size_t y = 0; y < image.GetHeight(); ++y) {
     for (size_t x = 0; x < image.GetWidth(); ++x) {

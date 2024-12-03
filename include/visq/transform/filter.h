@@ -33,7 +33,7 @@ class Filter {
         for (size_t c = 0; c < image->GetChannels(); ++c) {
 
           for (long ky = -ky2; ky <= ky2; ++ky) {
-            for (long kx = -kx2; kx < kx2; ++kx) {
+            for (long kx = -kx2; kx <= kx2; ++kx) {
               result.Set(result.At(y, x, c) + kernel->At(ky + ky2, kx + ky2, 0) * image->At(y + ky, x + kx, c),
                          y,
                          x,

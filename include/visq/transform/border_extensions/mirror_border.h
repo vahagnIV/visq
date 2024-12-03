@@ -15,7 +15,7 @@ public:
   [[nodiscard]] const T At(long y, long x, size_t c) const override {
 
     if (y < 0) 
-      y = (static_cast<size_t>(-y) -1l) % this->image_.GetWidth();
+      y = (static_cast<size_t>(-y) -1l) % this->image_.GetHeight();
     else if(y >= this->image_.GetHeight()) 
       y = static_cast<long>(this->image_.GetHeight()) - 1l -  ((y - static_cast<long>(this->image_.GetHeight()))  % static_cast<long>(this->image_.GetHeight()));
 

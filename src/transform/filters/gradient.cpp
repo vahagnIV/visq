@@ -21,7 +21,7 @@ Image<double> CreateSobelY() {
   Image<double> result(3, 3, 1);
   result.Set(1., 0, 0, 0);
   result.Set(2., 0, 1, 0);
-  result.Set(-1., 0, 2, 0);
+  result.Set(1., 0, 2, 0);
 
   result.Set(0., 1, 0, 0);
   result.Set(0., 1, 1, 0);
