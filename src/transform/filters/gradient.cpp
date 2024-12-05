@@ -1,6 +1,7 @@
 #include <visq/transform/filters/gradient.h>
 
 namespace visq::transform::filters {
+    
 Image<double> CreateSobelX() {
   Image<double> result(3, 3, 1);
   result.Set(1., 0, 0, 0);
@@ -32,4 +33,5 @@ Image<double> CreateSobelY() {
   result.Set(-1., 2, 2, 0);
   return result;
 }
+
 }  // namespace visq::transform::filters

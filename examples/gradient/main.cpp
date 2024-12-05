@@ -34,8 +34,7 @@ int main(int argc, char *argv[]) {
   border_extensions::MirrorBorder<uint8_t> ext_image(img);
   
   auto sobel_x = transform::filters::CreateSobelX();
-  auto sobel_y = transform::filters::CreateSobelY();
-  
+  auto sobel_y = transform::filters::CreateSobelY();  
 
   Image<uint8_t> result_x = Filter::Apply(&sobel_x, &ext_image);
   Image<uint8_t> result_y = Filter::Apply(&sobel_y, &ext_image);

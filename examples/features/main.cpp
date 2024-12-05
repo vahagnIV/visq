@@ -2,11 +2,12 @@
 
 #include "io.h"
 #include "visq/features/fast_keypoint_detector.h"
+#include "visq/features/harris_corner_detector.h"
 #include "visq/utils/draw_keypoints.h"
 
 void PrintError() {
   std::cout << "Usage:\n"
-            << "resize \"method\"(nearest, bilinear)  \"input_image\" "
+            << "features \"method\"(nearest, bilinear)  \"input_image\" "
                "\"output_image\""
             << std::endl;
 }
@@ -38,16 +39,23 @@ int main(int argc, char *argv[]) {
   if (strcmp(argv[1], "brief") == 0) {
     std::cout << "Extracting keypoints with BRIEF" << std::endl;
     kp_detector = std::make_unique<features::FASTKeypointDetector<uint8_t>>();
-  } else if (strcmp(argv[1], "bilinear") == 0) {
-    std::cout << "Resizing using Bilinear interpolation" << std::endl;
-    // interpolation =
-    // std::make_unique<BilinearInterpolation<uint8_t>>(im.value());
+  } else if (strcmp(argv[1], "harris") == 0) {
+    std::cout << "Extracting keypoints with Harris" << std::endl;
+    kp_detector = std::make_unique<features::HarrisCornerDetector<uint8_t>>();
   } else {
     std::cerr << "Invalid interpolation method." << std::endl;
     return 1;
   }
 
   Image<uint8_t> image = im.value();
+  Image<double> kernel = transform::filters::CreateGaussianFilter(20, 11, 11);
+//  Image<uint8_t> image(100, 100, 3);
+  std::cout <<"Applying Gaussian filter" << std::endl;
+  border_extensions::MirrorBorder<uint8_t> ext_image(image);
+  image = Filter::Apply(&kernel, &ext_image);
+  std::cout << "Done" << std::endl;
+
+
   auto keypoints = kp_detector->ExtractKeyPoints(image);
   std::cout << "Found " << keypoints.size() << " keypoints." << std::endl;
   utils::DrawKeypoints(keypoints, image);

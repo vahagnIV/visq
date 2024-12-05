@@ -9,6 +9,7 @@ namespace visq::features{
 struct KeyPoint{
   geometry::Point2D<double> pt;
   double angle;
+  double strength;
 };
 
 } // visq::features
