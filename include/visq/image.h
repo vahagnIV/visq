@@ -4,6 +4,7 @@
 #include <memory>
 #include <cstring>  // For std::memcpy
 #include <cassert>
+#include <limits>
 
 namespace visq {
 
@@ -58,7 +59,7 @@ class Image {
    * @return Reference to the pixel's channel value.
    */
   void Set(T value, size_t y, size_t x, size_t c) {
-    assert((y * stride_) + (x * channels_) + c  < stride_ * height_);
+    assert((y * stride_) + (x * channels_) + c < stride_ * height_);
     data_.get()[(y * stride_) + (x * channels_) + c + offset_] = value;
   }
 
@@ -70,7 +71,7 @@ class Image {
    * @return Constant reference to the pixel's channel value.
    */
   [[nodiscard]] const T &At(size_t y, size_t x, size_t c) const {
-    assert((y * stride_) + (x * channels_) + c  < stride_ * height_);
+    assert((y * stride_) + (x * channels_) + c < stride_ * height_);
     return data_.get()[(y * stride_) + (x * channels_) + c + offset_];
   }
 
@@ -149,6 +150,42 @@ class Image {
 
   Image<T> Column(size_t column) {
     return Image<T>(*this, 1, height_, offset_ + column * channels_);
+  }
+
+  T Max() const {
+    T value = std::numeric_limits<T>::min();
+    for (int i = 0; i < GetHeight(); ++i) {
+      for (int j = 0; j < GetWidth(); ++j) {
+        for (int k = 0; k < GetChannels(); ++k) {
+          if(value < At(i, j, k))
+            value = At(i, j, k);
+        }
+      }
+    }
+    return value;
+  }
+
+  T Min() const {
+    T value = std::numeric_limits<T>::max();
+    for (int i = 0; i < GetHeight(); ++i) {
+      for (int j = 0; j < GetWidth(); ++j) {
+        for (int k = 0; k < GetChannels(); ++k) {
+          if(value > At(i, j, k))
+            value = At(i, j, k);
+        }
+      }
+    }
+    return value;
+  }
+
+  Image<T> &operator*=(T number) {
+    for (int i = 0; i < GetHeight(); ++i) {
+      for (int j = 0; j < GetWidth(); ++j) {
+        for (int k = 0; k < GetChannels(); ++k) {
+          Set(At(i, j, k) * number, i, j, k);
+        }
+      }
+    }
   }
 
   // Getters
