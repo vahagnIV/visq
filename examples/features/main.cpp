@@ -48,12 +48,12 @@ int main(int argc, char *argv[]) {
   }
 
   Image<uint8_t> image = im.value();
-  Image<double> kernel = transform::filters::CreateGaussianFilter(20, 11, 11);
-//  Image<uint8_t> image(100, 100, 3);
-  std::cout <<"Applying Gaussian filter" << std::endl;
-  border_extensions::MirrorBorder<uint8_t> ext_image(image);
-  image = Filter::Apply(&kernel, &ext_image);
-  std::cout << "Done" << std::endl;
+
+//  std::cout <<"Applying Gaussian filter" << std::endl;
+//  Image<double> kernel = transform::filters::CreateGaussianFilter(20, 11, 11);
+//  border_extensions::MirrorBorder<uint8_t> ext_image(image);
+//  image = Filter::Apply(&kernel, &ext_image);
+//  std::cout << "Done" << std::endl;
 
 
   auto keypoints = kp_detector->ExtractKeyPoints(image);
