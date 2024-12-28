@@ -12,7 +12,7 @@ void PrintError() {
 
 using namespace visq;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char * argv[]) {
   if (argc < 6) {
     PrintError();
     return 1;
@@ -29,15 +29,12 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  char *error;
-  size_t new_width = std::strtol(argv[4], &error, 10);
-  size_t new_height = std::strtol(argv[5], &error, 10);
-
-  Image<double> kernel = transform::filters::CreateGaussianFilter(1000, 17, 17);
+  Image<double> kernel = transform::filters::CreateGaussianFilterSeparable(3.5, 17);
+  Image<double> transposed = kernel.Transpose();
 //  Image<uint8_t> image(100, 100, 3);
 
   border_extensions::ConstantBorder<uint8_t> ext_image(im.value());
-  Image<uint8_t> result = Filter::Apply(&kernel, &ext_image);
+  Image<uint8_t> result = Filter::ApplySeparable(kernel, transposed, im.value(), BorderType::Mirror);
 
   if (strcmp(argv[1], "nearest") == 0) {
     //  std::cout << "Resizing using Nearest neighbor interpolation" << std::endl;

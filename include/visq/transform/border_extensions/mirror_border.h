@@ -10,9 +10,9 @@ template<typename T>
 class MirrorBorder: public BorderExtension<T> {
 public:
 
-  MirrorBorder(const Image<T> & image): BorderExtension<T>(image) {}
+  explicit MirrorBorder(const Image<T> & image): BorderExtension<T>(image) {}
 
-  [[nodiscard]] const T At(long y, long x, size_t c) const override {
+  [[nodiscard]] T At(long y, long x, size_t c) const override {
 
     if (y < 0) 
       y = (static_cast<size_t>(-y) -1l) % this->image_.GetHeight();

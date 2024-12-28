@@ -188,6 +188,18 @@ class Image {
     }
   }
 
+  Image<T> Transpose() const {
+    Image<T> result(GetHeight(), GetWidth(), GetChannels());
+    for (int i = 0; i < GetHeight(); ++i) {
+      for (int j = 0; j < GetWidth(); ++j) {
+        for (int k = 0; k < GetChannels(); ++k) {
+          result.Set(At(i, j, k) , j, i, k);
+        }
+      }
+    }
+    return result;
+  }
+
   // Getters
   [[nodiscard]] size_t GetWidth() const { return width_; }
   [[nodiscard]] size_t GetHeight() const { return height_; }

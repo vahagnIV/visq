@@ -28,6 +28,22 @@ Image<double> CreateGaussianFilter(double sigma, std::size_t size_x, std::size_t
   return CreateGaussianFilterInternal(sigma, size_x, size_y);
 }
 
+Image<double> CreateGaussianFilterSeparable(double sigma, std::size_t size) {
+  Image<double> result(size, 1, 1);
+  double total = 0;
+  double inv_sigma2 = 1. / 2. / sigma / sigma;
+  double coefficient = 1. /  std::sqrt(2 * M_PI ) / sigma;
+  for (long i = 0; i <= size / 2; ++i) {
+    auto distance = static_cast<double>( static_cast<double>(size / 2) - i );
+    double value = coefficient * std::exp(-distance * distance * inv_sigma2);
+    total += i == size / 2 ? value : 2 * value;
+    result.Set(value, 0, i, 0);
+    result.Set(value, 0, size - i - 1, 0);
+  }
+
+  return result;
+}
+
 } // filters
 // transform
 // visq

@@ -10,9 +10,9 @@ template<typename T>
 class ConstantBorder: public BorderExtension<T> {
 public:
 
-  ConstantBorder(const Image<T> & image): BorderExtension<T>(image) {}
+  explicit ConstantBorder(const Image<T> & image): BorderExtension<T>(image) {}
 
-  [[nodiscard]] const T At(long y, long x, size_t c) const override {
+  [[nodiscard]] T At(long y, long x, size_t c) const override {
     y = std::max(0l, y);
     y = std::min(static_cast<long>(this->image_.GetHeight()) - 1, y);
     x = std::max(0l, x);

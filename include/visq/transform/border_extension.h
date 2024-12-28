@@ -12,7 +12,7 @@ protected:
   Image<T> image_;
 
 public:
-  BorderExtension(const Image<T> & image): image_(image) {}
+  explicit BorderExtension(const Image<T> & image): image_(image) {}
 
   virtual ~BorderExtension() = default;
 
@@ -26,7 +26,7 @@ public:
   /*!
    * @brief for 0 <= x < image.width and 0 <= y < image.height  returns the value of the pixel. Otherwise returns the interpolated value.
    */  
-  [[nodiscard]] virtual const T At(long y, long x, size_t c) const = 0;
+  [[nodiscard]] virtual T At(long y, long x, size_t c) const = 0;
 };
 
 } // visq

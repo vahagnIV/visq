@@ -6,6 +6,7 @@
 namespace visq::transform::filters {
 
 Image<double> CreateGaussianFilter(double sigma, std::size_t size_x = 0, std::size_t size_y = 0);
+Image<double> CreateGaussianFilterSeparable(double sigma, std::size_t size_x = 0);
 
 } // filters
 // transform
