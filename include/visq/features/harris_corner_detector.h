@@ -16,9 +16,11 @@ template<typename T>
 class HarrisCornerDetector : public IKeypointDetector<T> {
   size_t window_size_ = 3;
   double k_ = 0.04;
+  Image<double> sum_kernel;
 
  public:
-  HarrisCornerDetector() {}
+  HarrisCornerDetector() : sum_kernel(transform::filters::CreateGaussianFilterSeparable(3, 3)) {
+  }
 
   std::vector<KeyPoint> ExtractKeyPoints(const Image<T> &image) override {
     if (image.GetWidth() < 2 * window_size_ + 1 ||
@@ -37,20 +39,21 @@ class HarrisCornerDetector : public IKeypointDetector<T> {
 //    double min = image.Min();
     double min = 0;//image.Min();
     double scale = 255. / (max - min);
-    Image < uint8_t > normalized(image.GetWidth(), image.GetHeight(), 1);
+    Image<uint8_t> normalized(image.GetWidth(), image.GetHeight(), 1);
     for (int i = 0; i < image.GetHeight(); ++i) {
       for (int j = 0; j < image.GetWidth(); ++j) {
 
-        double value = std::max(0.,(image.At(i, j, 0) - min) * scale);
+        double value = std::max(0., (image.At(i, j, 0) - min) * scale);
         normalized.Set(value, i, j, 0);
       }
     }
     SaveImage(normalized, path, ImageFormat::Jpeg);
   }
+
   Image<double> ComputeSlidingSum(const Image<double> &input) {
     border_extensions::MirrorBorder<uint8_t> ext_image(input);
-    Image<double> sum_kernel(window_size_, window_size_, 1, 1.);
-    return Filter::Apply(&sum_kernel, &ext_image);
+//    Image<double> sum_kernel(window_size_, window_size_, 1, 1.);
+    return Filter::ApplySeparable<double, double>(sum_kernel, sum_kernel.Transpose(), input, BorderType::Mirror);
   }
 
   std::vector<KeyPoint> ExtractKeyPointsImpl(const Image<double> &input) {
@@ -82,12 +85,12 @@ class HarrisCornerDetector : public IKeypointDetector<T> {
         double det_M = m11 * m22 - m12 * m21;
         double trace_M = m11 + m22;
 
-        R.Set(det_M - 20*k_ * trace_M , y, x, 0);
+        R.Set(det_M - k_ * trace_M * trace_M, y, x, 0);
       }
     }
 //    SaveNormalized(R, "/home/vahagn/Pictures/R.jpg");
 
-    double threshold = 0.4* R.Max();
+    double threshold = 0.01 * R.Max();
     std::vector<KeyPoint> result;
     for (size_t y = window_size_; y < input.GetHeight() - window_size_; ++y) {
       for (size_t x = window_size_; x < input.GetWidth() - window_size_; ++x) {

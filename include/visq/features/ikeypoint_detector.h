@@ -5,8 +5,7 @@
 #include <visq/image.h>
 #include <visq/features/keypoint.h>
 
-namespace visq {
-namespace features {
+namespace visq::features {
 
 template<typename T>
 class IKeypointDetector {
@@ -16,6 +15,6 @@ class IKeypointDetector {
 };
 
 } // features
-} // visq
+// visq
 
 #endif //VISQPROJECT_INCLUDE_VISQ_FEATURES_I_KEYPOINT_DETECTOR_H_
